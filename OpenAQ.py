@@ -28,12 +28,12 @@ def update_cities(country):
                             country=country.code)
         stop = page * result['meta']['limit'] > result['meta']['found']
         for city in result['results']:
-            c = City.get(city_name=city['city'],
+            c = City.get(name=city['city'],
                          country=country)
             if c is None:
-                c = City(city_name=city['city'],
+                c = City(name=city['city'],
                          country=country)
-            print("-{}\x1b[0K".format(c.city_name))
+            print("-{}\x1b[0K".format(c.name))
             update_locations(c)
         page += 1
 
@@ -46,17 +46,17 @@ def update_locations(city):
     stop = False
     while not stop:
         result = api.locations(page=page, limit=ENTRIES_PER_PAGE,
-                               city=city.city_name)
+                               city=city.name)
         stop = page * result['meta']['limit'] > result['meta']['found']
         for location in result['results']:
-            l = Location.get(location_name=location['location'], city=city)
+            l = Location.get(name=location['location'], city=city)
             if l is None:
                 coordinates = location.get('coordinates', {})
-                l = Location(location_name=location['location'],
+                l = Location(name=location['location'],
                              latitude=coordinates.get('latitude', None),
                              longitude=coordinates.get('longitude', None),
                              city=city)
-            print("|-{}\x1b[0K".format(l.location_name))
+            print("|-{}\x1b[0K".format(l.name))
             update_measurements(l)
         page += 1
     print("\r\x1b[0K\r\x1b[1A", end="")
@@ -68,7 +68,7 @@ def update_measurements(location):
     stop = False
     while not stop:
         result = api.measurements(page=page, limit=ENTRIES_PER_PAGE,
-                                  location=location.location_name, sort="asc",
+                                  location=location.name, sort="asc",
                                   order_by="date")
         stop = page * result['meta']['limit'] > result['meta']['found']
         for measures in result['results']:

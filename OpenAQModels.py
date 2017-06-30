@@ -13,14 +13,14 @@ class Country(db.Entity):
 
 
 class City(db.Entity):
-    city_name = Required(str, 128)
+    name = Required(str, 128)
     country = Required(Country)
 
     locations = Set('Location')
 
 
 class Location(db.Entity):
-    location_name = Required(str, 128)
+    name = Required(str, 128)
     city = Required(City)
     latitude = Optional(float, nullable=True)
     longitude = Optional(float, nullable=True)
