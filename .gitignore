@@ -100,5 +100,6 @@ ENV/
 # mypy
 .mypy_cache/
 
-# settings
+# other
 settings.py
+db.sqlite3
