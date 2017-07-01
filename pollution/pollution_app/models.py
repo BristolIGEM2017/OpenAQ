@@ -13,8 +13,8 @@ class City(models.Model):
 
 class Location(models.Model):
     name = models.CharField(max_length=128)
-    latitude = models.DecimalField(max_digits=11, decimal_places=7)
-    longitude = models.DecimalField(max_digits=11, decimal_places=7)
+    latitude = models.DecimalField(max_digits=11, decimal_places=7, null=True)
+    longitude = models.DecimalField(max_digits=11, decimal_places=7, null=True)
 
     city = models.ForeignKey(City, related_name='locations')
 
