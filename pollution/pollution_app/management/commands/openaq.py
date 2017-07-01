@@ -3,7 +3,7 @@ from django.utils import timezone
 from pollution_app.models import Country, City, Location, Measurement
 from math import floor
 from datetime import datetime
-from ..OpenAQAPI import API
+from .openaq_api import API
 
 api = API()
 ENTRIES_PER_PAGE = 1000
