@@ -48,6 +48,7 @@ def update_locations(ex, city):
     stop = False
     while not stop:
         result = api.locations(page=page, limit=ENTRIES_PER_PAGE,
+                               country=city.country.code,
                                city=city.name)
         stop = page * result['meta']['limit'] > result['meta']['found']
         for location in result['results']:
@@ -73,9 +74,12 @@ def update_locations(ex, city):
 def update_measurements(ex, location):
     page = floor((1 + location.measurements.count()) / ENTRIES_PER_PAGE) + 1
     result = api.measurements(page=page, limit=ENTRIES_PER_PAGE,
+                              country=location.city.country.code,
+                              city=location.city.name,
                               location=location.name, sort="asc",
                               order_by="date")
     stop = page * result['meta']['limit'] > result['meta']['found']
+    pages = floor(result['meta']['found']/result['meta']['limit']) + 1
     for measures in result['results']:
         date = datetime.strptime(measures['date']['utc'],
                                  '%Y-%m-%dT%H:%M:%S.%fZ')
@@ -94,9 +98,8 @@ def update_measurements(ex, location):
             }
         )
 
-    page += 1
     return (
-        "Location page {} {}".format(page, location.name),
+        "Location page {}/{} {}".format(page, pages, location.name),
         [] if stop else [ex.submit(update_measurements, ex, location)]
     )
 
